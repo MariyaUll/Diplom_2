@@ -24,9 +24,6 @@ class TestCreateUser:
             assert "accessToken" in body
             assert "refreshToken" in body
 
-        # подчищаем пользователя, чтобы не засорять базу
-        client.delete_user(body["accessToken"])
-
     @allure.title("Создание пользователя, который уже зарегистрирован")
     def test_create_duplicate_user(self, client, registered_user):
         payload = {

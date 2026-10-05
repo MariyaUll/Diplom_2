@@ -33,6 +33,6 @@ def authorized_client(client, registered_user):
 
 
 @pytest.fixture
-def order_ingredients():
+def order_ingredients(client):
     """Случайный набор валидных ID ингредиентов."""
-    return get_random_ingredient_ids(count=3)
+    return get_random_ingredient_ids(client, count=3)

@@ -1,9 +1,6 @@
 import random
-
-import requests
+import allure
 from faker import Faker
-
-from constants import INGREDIENTS_URL
 
 fake = Faker("ru_RU")
 
@@ -24,13 +21,10 @@ def remove_field(payload, field):
     return data
 
 
-def get_ingredient_ids():
-    """Запрашивает у API список всех ингредиентов и возвращает их ID."""
-    response = requests.get(INGREDIENTS_URL)
-    # response.raise_for_status()
-    return [item["_id"] for item in response.json()["data"]]
-
-
-def get_random_ingredient_ids(count=2):
-    """Возвращает count случайных валидных ID ингредиентов."""
-    return random.sample(get_ingredient_ids(), count)
+@allure.step("Получаем {count} случайных валидных ID ингредиентов через API-клиент")
+def get_random_ingredient_ids(client, count=2):
+    response = client.get_ingredients()
+    ids = [item["_id"] for item in response.json()["data"]]
+    if count > len(ids):
+        raise ValueError(f"Запрошено {count} ингредиентов, но доступно только {len(ids)}")
+    return random.sample(ids, count)
